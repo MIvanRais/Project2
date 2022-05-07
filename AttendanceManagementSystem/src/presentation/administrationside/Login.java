@@ -7,11 +7,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Login extends JFrame {
+public class Login extends JFrame implements ActionListener {
     // 33, 72, 192 - primer
     // 38, 78, 202 - secondary
-
     JLabel labelLogin, labelUsername, labelPassword;
     JTextField textFieldUsername;
     JPasswordField passwordField;
@@ -37,6 +38,7 @@ public class Login extends JFrame {
         labelUsername = new JLabel("Username");
         labelUsername.setBounds(25, 100, 100, 50);
         labelUsername.setFont(new Font(null, Font.PLAIN, 15));
+        labelUsername.setForeground(new Color(148, 164, 175));
 
         // **create textFieldUsername */
         textFieldUsername = new JTextField();
@@ -48,6 +50,7 @@ public class Login extends JFrame {
         labelPassword = new JLabel("Password");
         labelPassword.setBounds(25, 170, 100, 50);
         labelPassword.setFont(new Font(null, Font.PLAIN, 15));
+        labelPassword.setForeground(new Color(148, 164, 175));
 
         // **create passwordField */
         passwordField = new JPasswordField();
@@ -61,6 +64,7 @@ public class Login extends JFrame {
         btnClear.setBackground(new Color(38, 78, 202));
         btnClear.setForeground(Color.white);
         btnClear.setFocusable(false);
+        btnClear.addActionListener(this);
 
         // **create btnLogin */
         btnLogin = new JButton("Login");
@@ -69,6 +73,7 @@ public class Login extends JFrame {
         btnLogin.setForeground(Color.white);
         btnLogin.setFocusable(false);
 
+        // **add components to frame */
         this.add(btnLogin);
         this.add(btnClear);
         this.add(passwordField);
@@ -77,5 +82,15 @@ public class Login extends JFrame {
         this.add(labelUsername);
         this.add(labelLogin);
         this.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnClear) {
+            // **when click btnClear, it is going to clear those */
+            textFieldUsername.setText("");
+            passwordField.setText("");
+        }
+
     }
 }
