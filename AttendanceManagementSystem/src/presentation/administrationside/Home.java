@@ -18,6 +18,9 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import logic.LogicBuilding;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -79,20 +82,10 @@ public class Home extends JFrame implements ActionListener {
 
         // **create table*/
         Object dataColumns[] = { "No", "Username", "Registration Date" };
-        Object dataRows[][] = {
-                { "1", "Ivan", "2022-05-05" },
-                { "2", "Jodi", "2022-05-05" },
-                { "3", "Udin", "2022-05-05" },
-                { "1", "Ivan", "2022-05-05" },
-                { "2", "Jodi", "2022-05-05" }
-        };
-
-        // **create more flexible table than JTable by using DefaultTableModel*/
-        defaultTableModel = new DefaultTableModel(dataRows, dataColumns);
 
         // **The JTable can be set up to display any data model so we can pass in
-        // DefaultTableModel to JTable
-        tableUsers = new JTable(defaultTableModel) {
+        //** */ DefaultTableModel to JTable
+        tableUsers = new JTable(LogicBuilding.getAllData("SELECT username, registration_date FROM users;", dataColumns)) {
             @Override
             // **set to false in order to cells can't edit */
             public boolean isCellEditable(int row, int column) {
