@@ -13,6 +13,8 @@ CREATE TABLE admins(
     registration_date DATE DEFAULT (CURRENT_DATE())
 );
 
+INSERT INTO admins (username, password) VALUES ("admin", "admin");
+
 --**create table admin_details
 CREATE TABLE admin_details(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -31,6 +33,11 @@ CREATE TABLE users(
     password VARCHAR(15) NOT NULL,
     registration_date DATE DEFAULT (CURRENT_DATE())
 );
+
+insert into users (username, password)  values
+    ("Ucup", "ucup123"),
+    ("Ivan", "ivan123"),
+    ("Ajeng", "ajeng123");
 
 --**create table user_details
 CREATE TABLE user_details(
