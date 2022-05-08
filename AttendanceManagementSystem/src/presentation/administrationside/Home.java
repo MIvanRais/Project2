@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -27,6 +28,7 @@ import java.awt.event.ActionListener;
 public class Home extends JFrame implements ActionListener {
     // 33, 72, 192 - primer
     // 38, 78, 202 - secondary
+    Object dataColumns[] = { "No", "Username", "Registration Date" };
     JMenuBar menuBar;
     JMenu adminMenu;
     JMenuItem profileMenu, changePasswordMenu, logoutMenu;
@@ -35,7 +37,8 @@ public class Home extends JFrame implements ActionListener {
     JTable tableUsers;
     DefaultTableModel defaultTableModel;
     JScrollPane scrollPane;
-    JButton btnDelete;
+    JButton btnDelete, btnAdd;
+    JTextField textFieldSearch;
 
     Home() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -80,12 +83,19 @@ public class Home extends JFrame implements ActionListener {
         labelHeader.setForeground(Color.white);
         labelHeader.setHorizontalAlignment(JLabel.CENTER);
 
-        // **create table*/
-        Object dataColumns[] = { "No", "Username", "Registration Date" };
+        // **create textFieldSearch */
+        textFieldSearch = new JTextField();
+        textFieldSearch.setSize(178, 35);
+        textFieldSearch.setFont(new Font(null, Font.BOLD, 14));
+        textFieldSearch.setBounds(820, 130, 178, 30);
+        textFieldSearch.setText("Search");
+        textFieldSearch.addActionListener(this);
 
+        // **create table*/
         // **The JTable can be set up to display any data model so we can pass in
-        //** */ DefaultTableModel to JTable
-        tableUsers = new JTable(LogicBuilding.getAllData("SELECT username, registration_date FROM users;", dataColumns)) {
+        // ** */ DefaultTableModel to JTable
+        tableUsers = new JTable(
+                LogicBuilding.getAllData("SELECT username, registration_date FROM users;", dataColumns)) {
             @Override
             // **set to false in order to cells can't edit */
             public boolean isCellEditable(int row, int column) {
@@ -116,17 +126,28 @@ public class Home extends JFrame implements ActionListener {
 
         // **as a container for the table */
         scrollPane = new JScrollPane(tableUsers);
-        scrollPane.setBounds(200, 150, 800, 400);
+        scrollPane.setBounds(200, 170, 800, 400);
         scrollPane.getViewport().setBackground(Color.white);
+
+        // **create btnAdd */
+        btnAdd = new JButton("Create");
+        btnAdd.setBounds(750, 580, 100, 35);
+        btnAdd.setFocusable(false);
+        btnAdd.setBackground(new Color(38, 78, 202));
+        btnAdd.setForeground(Color.white);
+        btnAdd.addActionListener(this);
 
         // **create btnDelete */
         btnDelete = new JButton("Delete");
-        btnDelete.setBounds(880, 565, 100, 45);
+        btnDelete.setBounds(880, 580, 100, 35);
         btnDelete.setFocusable(false);
         btnDelete.setBackground(new Color(38, 78, 202));
         btnDelete.setForeground(Color.white);
+        btnDelete.addActionListener(this);
 
         // **add components to frame */
+        this.add(btnAdd);
+        this.add(textFieldSearch);
         this.add(btnDelete);
         this.add(scrollPane);
         this.setJMenuBar(menuBar);
@@ -140,16 +161,32 @@ public class Home extends JFrame implements ActionListener {
         if (e.getSource() == profileMenu) {
             this.dispose();
             new Profile();
-        } else if (e.getSource() == changePasswordMenu) {
+        }
+        if (e.getSource() == changePasswordMenu) {
             this.dispose();
             new ChangePassword();
-        } else {
+        }
+        if (e.getSource() == logoutMenu) {
             int answer;
             answer = JOptionPane.showConfirmDialog(null, "Are you sure want to logout?", "Logout",
                     JOptionPane.YES_NO_OPTION);
             if (answer == 0) {
                 this.dispose();
             }
+        }
+
+        if (e.getSource() == textFieldSearch) {
+            String keyword = textFieldSearch.getText();
+            System.out.println(keyword);
+            tableUsers.setModel(
+                    LogicBuilding.getSearchData("SELECT username, registration_date FROM users WHERE username LIKE '%"
+                            + keyword + "%' OR registration_date LIKE '%" + keyword + "%';", dataColumns));
+
+        }
+
+        if (e.getSource() == btnAdd) {
+            this.dispose();
+            new RegisterUser();
         }
     }
 }
