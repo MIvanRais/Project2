@@ -37,11 +37,40 @@ public class LogicBuilding {
             // **retrieve the result of the query */
             ResultSet resultSet = statement.getResultSet();
 
-            
             int getNumber = 1;
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 Object rowData[] = {
-                    getNumber,resultSet.getString("username"), resultSet.getDate("registration_date")
+                        getNumber, resultSet.getString("username"), resultSet.getDate("registration_date")
+                };
+                getDataSet.addRow(rowData);
+                getNumber++;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getDataSet;
+    }
+
+    public static DefaultTableModel getSearchData(String query, Object[] columnNames) {
+        getConnection();
+
+        DefaultTableModel getDataSet = new DefaultTableModel(null, columnNames);
+
+        try {
+            // **create Statement object to allow execute a query */
+            statement = connect.createStatement();
+
+            // **execute query by calling execute() method */
+            statement.execute(query);
+
+            // **retrieve the result of the query */
+            ResultSet resultSet = statement.getResultSet();
+
+            int getNumber = 1;
+            while (resultSet.next()) {
+                Object rowData[] = {
+                        getNumber, resultSet.getString("username"), resultSet.getDate("registration_date")
                 };
                 getDataSet.addRow(rowData);
                 getNumber++;
