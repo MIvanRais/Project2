@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 
+
 public class LogicBuilding {
 
     private static Connection connect;
@@ -128,6 +129,37 @@ public class LogicBuilding {
 
             // **execute query by calling execute() method */
             if(statement.executeUpdate(query) > 0){
+                resultQuery = true;
+            }
+
+            //**close statement and connect */
+            statement.close();
+            connect.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultQuery;
+    }
+
+     //**checkLogin method */
+     public static boolean checkLogin(String query){
+        boolean resultQuery = false;
+    
+        getConnection();
+
+        try {
+            // **create Statement object to allow execute a query */
+            statement = connect.createStatement();
+
+            // **execute query by calling execute() method */
+            statement.execute(query);
+
+            // **retrieve the result of the query */
+            ResultSet resultSet = statement.getResultSet();
+
+            resultSet.next();
+            if(resultSet.getInt(1) == 1){
                 resultQuery = true;
             }
 
