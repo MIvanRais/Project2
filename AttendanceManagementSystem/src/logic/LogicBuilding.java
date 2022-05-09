@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 
+import presentation.administrationside.ChangePassword;
+import presentation.administrationside.Login;
 
 public class LogicBuilding {
 
@@ -47,7 +49,7 @@ public class LogicBuilding {
                 getNumber++;
             }
 
-            //**close statement and connect */
+            // **close statement and connect */
             statement.close();
             connect.close();
 
@@ -57,7 +59,7 @@ public class LogicBuilding {
         return getDataSet;
     }
 
-    //**getSearchData method */
+    // **getSearchData method */
     public static DefaultTableModel getSearchData(String query, Object[] columnNames) {
         getConnection();
 
@@ -82,7 +84,7 @@ public class LogicBuilding {
                 getNumber++;
             }
 
-            //**close statement and connect */
+            // **close statement and connect */
             statement.close();
             connect.close();
 
@@ -92,10 +94,10 @@ public class LogicBuilding {
         return getDataSet;
     }
 
-    //**insertData method */
-    public static boolean insertData(String query){
+    // **insertData method */
+    public static boolean insertData(String query) {
         boolean resultQuery = false;
-    
+
         getConnection();
 
         try {
@@ -103,11 +105,11 @@ public class LogicBuilding {
             statement = connect.createStatement();
 
             // **execute query by calling execute() method */
-            if(statement.executeUpdate(query) > 0){
+            if (statement.executeUpdate(query) > 0) {
                 resultQuery = true;
             }
 
-            //**close statement and connect */
+            // **close statement and connect */
             statement.close();
             connect.close();
 
@@ -117,10 +119,10 @@ public class LogicBuilding {
         return resultQuery;
     }
 
-    //**deleteData method */
-    public static boolean deleteData(String query){
+    // **deleteData method */
+    public static boolean deleteData(String query) {
         boolean resultQuery = false;
-    
+
         getConnection();
 
         try {
@@ -128,11 +130,11 @@ public class LogicBuilding {
             statement = connect.createStatement();
 
             // **execute query by calling execute() method */
-            if(statement.executeUpdate(query) > 0){
+            if (statement.executeUpdate(query) > 0) {
                 resultQuery = true;
             }
 
-            //**close statement and connect */
+            // **close statement and connect */
             statement.close();
             connect.close();
 
@@ -142,10 +144,10 @@ public class LogicBuilding {
         return resultQuery;
     }
 
-     //**checkLogin method */
-     public static boolean checkLogin(String query){
+    // **checkLogin method */
+    public static boolean checkLogin(String query) {
         boolean resultQuery = false;
-    
+
         getConnection();
 
         try {
@@ -159,11 +161,49 @@ public class LogicBuilding {
             ResultSet resultSet = statement.getResultSet();
 
             resultSet.next();
-            if(resultSet.getInt(1) == 1){
+            if (resultSet.getInt(1) == 1) {
                 resultQuery = true;
             }
 
-            //**close statement and connect */
+            // **close statement and connect */
+            statement.close();
+            connect.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultQuery;
+    }
+
+    // **changePassword method
+    public static boolean chngePassword(String query) {
+        boolean resultQuery = false;
+
+        getConnection();
+
+        try {
+            // **create Statement object to allow execute a query */
+            statement = connect.createStatement();
+
+            // **execute query by calling execute() method */
+            statement.execute(query);
+
+            // **retrieve the result of the query */
+            ResultSet resultSet = statement.getResultSet();
+
+            resultSet.next();
+            if (resultSet.getInt(1) == 1) {
+                System.out.println("current password same");
+                if (ChangePassword.newPass.equals(ChangePassword.confirmPass)) {
+                    if (statement.executeUpdate(
+                            "UPDATE admins SET password ='" + ChangePassword.newPass + "' WHERE username ='"
+                                    + Login.username + "' AND password ='" + Login.password + "';") > 0) {
+                        resultQuery = true;
+                    }
+                }
+            }
+
+            // **close statement and connect */
             statement.close();
             connect.close();
 
