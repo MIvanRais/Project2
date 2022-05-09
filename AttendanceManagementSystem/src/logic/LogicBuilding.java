@@ -115,4 +115,29 @@ public class LogicBuilding {
         }
         return resultQuery;
     }
+
+    //**deleteData method */
+    public static boolean deleteData(String query){
+        boolean resultQuery = false;
+    
+        getConnection();
+
+        try {
+            // **create Statement object to allow execute a query */
+            statement = connect.createStatement();
+
+            // **execute query by calling execute() method */
+            if(statement.executeUpdate(query) > 0){
+                resultQuery = true;
+            }
+
+            //**close statement and connect */
+            statement.close();
+            connect.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultQuery;
+    }
 }
