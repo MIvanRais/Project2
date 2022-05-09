@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.UIManager;
+import logic.LogicBuilding;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -19,15 +20,18 @@ import java.awt.event.ActionListener;
 public class ChangePassword extends JFrame implements ActionListener {
 
     JPanel panelNorth, panelCenter;
-    JLabel labelHeader, labelPassCurrent, labelPassNew, labelPassConfirm;
+    JLabel labelHeader, labelPassCurrent, labelPassNew, labelPassConfirm, labelWarnCurrPass, labelWarnNewPass,
+            labelWarnConfrimPass;
     JMenuBar menuBar;
     JMenu adminMenu;
-    JMenuItem profileMenu, logoutMenu, homeMenu;
+    JMenuItem logoutMenu, homeMenu;
     JPasswordField passwordFieldCurrent, passwordFieldNew, passwordFieldConfirm;
     JButton btnChangePassword;
 
+    public static String newPass, confirmPass;
+
     ChangePassword() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setTitle("Change Password");
         this.setSize(1200, 800);
         this.setResizable(false);
@@ -44,14 +48,11 @@ public class ChangePassword extends JFrame implements ActionListener {
         // **create menuItem */
         homeMenu = new JMenuItem("Home");
         homeMenu.addActionListener(this);
-        profileMenu = new JMenuItem("Profile");
-        profileMenu.addActionListener(this);
         logoutMenu = new JMenuItem("Logout");
         logoutMenu.addActionListener(this);
 
         // **add component (menu item) to menu */
         adminMenu.add(homeMenu);
-        adminMenu.add(profileMenu);
         adminMenu.add(logoutMenu);
 
         // **add component (menu) to menu bar */
@@ -72,7 +73,7 @@ public class ChangePassword extends JFrame implements ActionListener {
         // **create panelCenter */
         panelCenter = new JPanel();
         panelCenter.setLayout(null);
-        panelCenter.setBounds(400, 150, 400, 360);
+        panelCenter.setBounds(400, 150, 400, 380);
         panelCenter.setBackground(Color.white);
 
         // **create labelPassCurrent */
@@ -87,36 +88,55 @@ public class ChangePassword extends JFrame implements ActionListener {
         passwordFieldCurrent.setSize(350, 35);
         passwordFieldCurrent.setFont(new Font(null, Font.BOLD, 14));
 
+        // **create labelWarnCurrPass*/
+        labelWarnCurrPass = new JLabel("Please Enter Your Current Password");
+        labelWarnCurrPass.setBounds(25, 80, 300, 50);
+        labelWarnCurrPass.setFont(new Font(null, Font.ITALIC, 12));
+        labelWarnCurrPass.setForeground(Color.red);
+
         // **create labelPassNew */
         labelPassNew = new JLabel("New Password");
         labelPassNew.setFont(new Font(null, Font.PLAIN, 14));
         labelPassNew.setForeground(new Color(148, 164, 175));
-        labelPassNew.setBounds(25, 100, 400, 45);
+        labelPassNew.setBounds(25, 115, 400, 45);
 
         // **create passwordFieldNew */
         passwordFieldNew = new JPasswordField();
         passwordFieldNew.setSize(350, 35);
         passwordFieldNew.setFont(new Font(null, Font.BOLD, 14));
-        passwordFieldNew.setBounds(25, 135, 350, 35);
+        passwordFieldNew.setBounds(25, 150, 350, 35);
+
+        // **create labelWarnNewPass
+        labelWarnNewPass = new JLabel("Please Enter Your New password");
+        labelWarnNewPass.setBounds(25, 170, 300, 50);
+        labelWarnNewPass.setFont(new Font(null, Font.ITALIC, 12));
+        labelWarnNewPass.setForeground(Color.red);
 
         // **create labelPassConfirm */
         labelPassConfirm = new JLabel("Confirm New Password");
         labelPassConfirm.setFont(new Font(null, Font.PLAIN, 14));
         labelPassConfirm.setForeground(new Color(148, 164, 175));
-        labelPassConfirm.setBounds(25, 175, 400, 45);
+        labelPassConfirm.setBounds(25, 200, 400, 45);
 
         // **create passwordFieldConfirm */
         passwordFieldConfirm = new JPasswordField();
         passwordFieldConfirm.setSize(350, 35);
         passwordFieldConfirm.setFont(new Font(null, Font.BOLD, 14));
-        passwordFieldConfirm.setBounds(25, 210, 350, 35);
+        passwordFieldConfirm.setBounds(25, 235, 350, 35);
+
+        // **create labelWarnConfrimPass
+        labelWarnConfrimPass = new JLabel("Please Re-enter Your Password");
+        labelWarnConfrimPass.setBounds(25, 255, 300, 50);
+        labelWarnConfrimPass.setFont(new Font(null, Font.ITALIC, 12));
+        labelWarnConfrimPass.setForeground(Color.red);
 
         // **create btnChangePassword */
         btnChangePassword = new JButton("Change Password");
-        btnChangePassword.setBounds(25, 260, 170, 35);
+        btnChangePassword.setBounds(25, 310, 170, 35);
         btnChangePassword.setFocusable(false);
         btnChangePassword.setBackground(new Color(38, 78, 202));
         btnChangePassword.setForeground(Color.white);
+        btnChangePassword.addActionListener(this);
 
         // **add components to panelCenter */
         panelCenter.add(btnChangePassword);
@@ -141,11 +161,9 @@ public class ChangePassword extends JFrame implements ActionListener {
             // **when click homeMenu item, it is going to open home page
             this.dispose();
             new Home();
-        } else if (e.getSource() == profileMenu) {
-            // **when click profileMenu item, it is going to open profile page */
-            this.dispose();
-            new Profile();
-        } else {
+        }
+        if (e.getSource() == logoutMenu) {
+            // **when click logoutMenu item, it is going to close the page */
             int answer;
             answer = JOptionPane.showConfirmDialog(null, "Are you sure want to logout?", "Logout",
                     JOptionPane.YES_NO_OPTION);
@@ -155,6 +173,53 @@ public class ChangePassword extends JFrame implements ActionListener {
             }
         }
 
-    }
+        if (e.getSource() == btnChangePassword) {
+            //**when click btnChangePassword, what will happen?  */
+            if (passwordFieldNew.getPassword().length == 0 || passwordFieldCurrent.getPassword().length == 0
+                    || passwordFieldConfirm.getPassword().length == 0) {
+                //**if one of each password fields empty, the specific condition will be happening  */
+                ChangePassword.this.setVisible(false);
 
+                // //**change password form validation */
+                if (passwordFieldCurrent.getPassword().length == 0) {
+                    panelCenter.add(labelWarnCurrPass);
+                }
+                if (passwordFieldCurrent.getPassword().length > 1) {
+                    panelCenter.remove(labelWarnCurrPass);
+                }
+
+                if (passwordFieldNew.getPassword().length == 0) {
+                    panelCenter.add(labelWarnNewPass);
+                }
+                if (passwordFieldNew.getPassword().length > 1) {
+                    panelCenter.remove(labelWarnNewPass);
+                }
+
+                if (passwordFieldConfirm.getPassword().length == 0) {
+                    panelCenter.add(labelWarnConfrimPass);
+                }
+                if (passwordFieldConfirm.getPassword().length > 1) {
+                    panelCenter.remove(labelWarnConfrimPass);
+                }
+
+                ChangePassword.this.setVisible(true);
+            } else {
+                // **if all of password fields are not empty, the LogicBuilding.chngePassword is going to called */
+                String currentPass = String.valueOf(passwordFieldCurrent.getPassword());
+                newPass = String.valueOf(passwordFieldNew.getPassword());
+                confirmPass = String.valueOf(passwordFieldConfirm.getPassword());
+
+                if (LogicBuilding.chngePassword("SELECT COUNT(*) FROM admins WHERE username ='" + Login.username
+                        + "'AND (password ='" + Login.password + "' AND password = '" + currentPass + "');")) {
+                    JOptionPane.showMessageDialog(null, "Change Password Successfully", "Successful",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                    new Login();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Change Password Unsuccessfully", "Unsuccessful",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
 }
