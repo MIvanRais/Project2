@@ -46,12 +46,17 @@ public class LogicBuilding {
                 getNumber++;
             }
 
+            //**close statement and connect */
+            statement.close();
+            connect.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return getDataSet;
     }
 
+    //**getSearchData method */
     public static DefaultTableModel getSearchData(String query, Object[] columnNames) {
         getConnection();
 
@@ -76,9 +81,38 @@ public class LogicBuilding {
                 getNumber++;
             }
 
+            //**close statement and connect */
+            statement.close();
+            connect.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return getDataSet;
+    }
+
+    //**insertData method */
+    public static boolean insertData(String query){
+        boolean resultQuery = false;
+    
+        getConnection();
+
+        try {
+            // **create Statement object to allow execute a query */
+            statement = connect.createStatement();
+
+            // **execute query by calling execute() method */
+            if(statement.executeUpdate(query) > 0){
+                resultQuery = true;
+            }
+
+            //**close statement and connect */
+            statement.close();
+            connect.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultQuery;
     }
 }
