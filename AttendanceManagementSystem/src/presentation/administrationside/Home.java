@@ -19,9 +19,7 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
 import logic.LogicBuilding;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -31,7 +29,7 @@ public class Home extends JFrame implements ActionListener {
     Object dataColumns[] = { "No", "Username", "Registration Date" };
     JMenuBar menuBar;
     JMenu adminMenu;
-    JMenuItem profileMenu, changePasswordMenu, logoutMenu;
+    JMenuItem changePasswordMenu, logoutMenu;
     JPanel panelNorth;
     JLabel labelHeader;
     JTable tableUsers;
@@ -46,7 +44,6 @@ public class Home extends JFrame implements ActionListener {
         this.setSize(1200, 800);
         this.setResizable(false);
         this.setLayout(null);
-        
 
         menuBar = new JMenuBar(); // **container for menu */
         menuBar.add(Box.createHorizontalGlue()); // **set menuBar position to right-align */
@@ -57,15 +54,12 @@ public class Home extends JFrame implements ActionListener {
         UIManager.put("Menu.font", setFont);
 
         // **create menuItem */
-        profileMenu = new JMenuItem("Profile");
-        profileMenu.addActionListener(this);
         changePasswordMenu = new JMenuItem("Change Password");
         changePasswordMenu.addActionListener(this);
         logoutMenu = new JMenuItem("Logout");
         logoutMenu.addActionListener(this);
 
         // **add component (menu item) to menu */
-        adminMenu.add(profileMenu);
         adminMenu.add(changePasswordMenu);
         adminMenu.add(logoutMenu);
 
@@ -159,15 +153,14 @@ public class Home extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == profileMenu) {
-            this.dispose();
-            new Profile();
-        }
         if (e.getSource() == changePasswordMenu) {
+            // **when click changePasswordMenu item, it is going to open ChangePassword page
+            // */
             this.dispose();
             new ChangePassword();
         }
         if (e.getSource() == logoutMenu) {
+            // **when click logoutMenu item, it is going to close the page */
             int answer;
             answer = JOptionPane.showConfirmDialog(null, "Are you sure want to logout?", "Logout",
                     JOptionPane.YES_NO_OPTION);
@@ -177,6 +170,7 @@ public class Home extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == textFieldSearch) {
+            // **when hit enter, it is going to search depending on your keyword
             String keyword = textFieldSearch.getText();
             System.out.println(keyword);
             tableUsers.setModel(
@@ -186,23 +180,29 @@ public class Home extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == btnAdd) {
+            // **when click btnAdd, it is going to open RegisterUser page */
             this.dispose();
             new RegisterUser();
         }
 
         if (e.getSource() == btnDelete) {
+            // *get selected row on tableUsers table
             int selectedRow = tableUsers.getSelectedRow();
 
-            if(selectedRow != -1){
+            if (selectedRow != -1) {
+                // ** when you already selected row, it is going to delete the row depend on
+                // your selected row */
                 String getUsername = tableUsers.getValueAt(selectedRow, 1).toString();
-                // System.out.println(getUsername);
                 if (LogicBuilding.deleteData("DELETE FROM users WHERE username ='" + getUsername + "';")) {
-                    JOptionPane.showMessageDialog(null, "Delete Data User Successful", "Successful", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Delete Data User Successful", "Successful",
+                            JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
                     new Home();
                 }
-            }else{
-                JOptionPane.showMessageDialog(null, "Firstly Please Select A Data", "Unsuccessful", JOptionPane.WARNING_MESSAGE);
+            } else {
+                // **if unsuccessful delete the row, the popup will be appear */
+                JOptionPane.showMessageDialog(null, "Firstly Please Select A Data", "Unsuccessful",
+                        JOptionPane.WARNING_MESSAGE);
             }
         }
     }
