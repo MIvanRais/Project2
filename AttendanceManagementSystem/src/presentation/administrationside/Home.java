@@ -172,7 +172,6 @@ public class Home extends JFrame implements ActionListener {
         if (e.getSource() == textFieldSearch) {
             // **when hit enter, it is going to search depending on your keyword
             String keyword = textFieldSearch.getText();
-            System.out.println(keyword);
             tableUsers.setModel(
                     LogicBuilding.getSearchData("SELECT username, registration_date FROM users WHERE username LIKE '%"
                             + keyword + "%' OR registration_date LIKE '%" + keyword + "%';", dataColumns));

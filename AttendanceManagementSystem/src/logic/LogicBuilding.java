@@ -193,7 +193,6 @@ public class LogicBuilding {
 
             resultSet.next();
             if (resultSet.getInt(1) == 1) {
-                System.out.println("current password same");
                 if (ChangePassword.newPass.equals(ChangePassword.confirmPass)) {
                     if (statement.executeUpdate(
                             "UPDATE admins SET password ='" + ChangePassword.newPass + "' WHERE username ='"
