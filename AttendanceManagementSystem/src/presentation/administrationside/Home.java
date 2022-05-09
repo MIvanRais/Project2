@@ -41,11 +41,12 @@ public class Home extends JFrame implements ActionListener {
     JTextField textFieldSearch;
 
     Home() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setTitle("Home");
         this.setSize(1200, 800);
         this.setResizable(false);
         this.setLayout(null);
+        
 
         menuBar = new JMenuBar(); // **container for menu */
         menuBar.add(Box.createHorizontalGlue()); // **set menuBar position to right-align */
@@ -187,6 +188,22 @@ public class Home extends JFrame implements ActionListener {
         if (e.getSource() == btnAdd) {
             this.dispose();
             new RegisterUser();
+        }
+
+        if (e.getSource() == btnDelete) {
+            int selectedRow = tableUsers.getSelectedRow();
+
+            if(selectedRow != -1){
+                String getUsername = tableUsers.getValueAt(selectedRow, 1).toString();
+                // System.out.println(getUsername);
+                if (LogicBuilding.deleteData("DELETE FROM users WHERE username ='" + getUsername + "';")) {
+                    JOptionPane.showMessageDialog(null, "Delete Data User Successful", "Successful", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                    new Home();
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Firstly Please Select A Data", "Unsuccessful", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 }
