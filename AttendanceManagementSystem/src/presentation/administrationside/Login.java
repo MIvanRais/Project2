@@ -16,9 +16,11 @@ public class Login extends JFrame implements ActionListener {
     // 33, 72, 192 - primer
     // 38, 78, 202 - secondary
     JLabel labelLogin, labelUsername, labelPassword, labelWarnUsername, labelWarnPass;
-    JTextField textFieldUsername;
-    JPasswordField passwordField;
+    static JTextField textFieldUsername;
+    static JPasswordField passwordField;
     JButton btnClear, btnLogin;
+
+    public static String username, password;
 
     Login() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,34 +110,37 @@ public class Login extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == btnLogin) {
-            Login.this.setVisible(false);
-            // **login form validation */
-            if (textFieldUsername.getText().trim().isEmpty()) {
-                this.add(labelWarnUsername);
+            if (textFieldUsername.getText().trim().isEmpty() || passwordField.getPassword().length == 0) {
+                Login.this.setVisible(false);
+                // **login form validation */
+                if (textFieldUsername.getText().trim().isEmpty()) {
+                    this.add(labelWarnUsername);
+                } else {
+                    this.remove(labelWarnUsername);
+                }
+
+                if (passwordField.getPassword().length == 0) {
+                    this.add(labelWarnPass);
+                }
+
+                if (passwordField.getPassword().length > 0) {
+                    this.remove(labelWarnPass);
+                }
+                Login.this.setVisible(true);
             } else {
-                this.remove(labelWarnUsername);
-            }
+                username = textFieldUsername.getText();
+                password = String.valueOf(passwordField.getPassword());
 
-            if (passwordField.getPassword().length == 0) {
-                this.add(labelWarnPass);
-            }
-
-            if (passwordField.getPassword().length > 0) {
-                this.remove(labelWarnPass);
-            }
-            Login.this.setVisible(true);
-
-            String username = textFieldUsername.getText();
-            String password = String.valueOf(passwordField.getPassword());
-
-            if (LogicBuilding.checkLogin("SELECT COUNT(*) FROM admins WHERE username ='" + username
-                    + "' AND password ='" + password + "';")) {
-                JOptionPane.showMessageDialog(null, "Login Successfully", "Successful",
-                        JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
-                new Home();
-            } else {
-                JOptionPane.showMessageDialog(null, "Login Unsuccessfully", "Unsuccessful", JOptionPane.ERROR_MESSAGE);
+                if (LogicBuilding.checkLogin("SELECT COUNT(*) FROM admins WHERE username ='" + username
+                        + "' AND password ='" + password + "';")) {
+                    JOptionPane.showMessageDialog(null, "Login Successfully", "Successful",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                    new Home();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login Unsuccessfully", "Unsuccessful",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }
