@@ -16,7 +16,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Profile extends JFrame implements ActionListener {
+public class UpdateProfile extends JFrame implements ActionListener {
 
     JPanel panelNorth, panelCenter;
     JLabel labelHeader, labelHeaderPanelCenter, labelFirstName, labelLastName, labelFullName, labelEmail;
@@ -26,7 +26,7 @@ public class Profile extends JFrame implements ActionListener {
     JMenuItem changePasswordMenu, logoutMenu, homeMenu;
     JButton btnSave;
 
-    Profile() {
+    UpdateProfile() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Profile");
         this.setSize(1200, 800);
