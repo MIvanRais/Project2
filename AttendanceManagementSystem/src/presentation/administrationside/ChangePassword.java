@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import logic.LogicBuilding;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -159,7 +158,6 @@ public class ChangePassword extends JFrame implements ActionListener {
         this.add(panelWest);
         this.add(panelEast);
         this.add(panelSouth);
-        // this.setJMenuBar(menuBar);
         this.setVisible(true);
     }
 
