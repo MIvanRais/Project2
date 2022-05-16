@@ -38,7 +38,7 @@ CREATE TABLE admin_details(
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     gender VARCHAR(6),
-    no_telephone CHAR(10),
+    no_telephone CHAR(12),
     email VARCHAR(30),
     admin_username VARCHAR(30),
     FOREIGN KEY(admin_username) REFERENCES admins(username)
@@ -48,3 +48,6 @@ CREATE TRIGGER tr_admins_ai AFTER INSERT ON admins FOR EACH ROW
 INSERT INTO admin_details (admin_username) values (new.username);
 
 UPDATE admin_details SET first_name = 'Udin', last_name = 'uhuy', gender = 'male', no_telephone = '21212324', email = 'udin@gmail.com' WHERE admin_username = 'admin';
+
+select username, first_name, last_name, gender, no_telephone, email from admins 
+inner join admin_details on admins.username = admin_details.admin_username;
