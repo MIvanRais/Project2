@@ -1,5 +1,6 @@
 package presentation.administrationside;
 
+import logic.LogicBuilding;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -9,9 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-
-import logic.LogicBuilding;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -117,10 +115,8 @@ public class RegisterUser extends JFrame implements ActionListener {
         // **add components to panelEast
         panelEast.add(labelUsername);
         panelEast.add(textFieldUsername);
-        // panelEast.add(labelWarnUsername);
         panelEast.add(labelPassword);
         panelEast.add(passwordField);
-        // panelEast.add(labelWarnPassword);
         panelEast.add(btnCreateAccount);
         panelEast.add(btnBack);
 
@@ -194,7 +190,5 @@ public class RegisterUser extends JFrame implements ActionListener {
                 }
             }
         }
-
     }
-
 }
