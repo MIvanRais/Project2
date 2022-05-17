@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 
 import presentation.administrationside.ChangePassword;
 import presentation.administrationside.Login;
+import presentation.administrationside.UpdateProfile;
 
 public class LogicBuilding {
 
@@ -211,4 +212,32 @@ public class LogicBuilding {
         }
         return resultQuery;
     }
+
+    // **updateProfile method
+    public static boolean updateProfile(String query) {
+        boolean resultQuery = false;
+
+        getConnection();
+
+        try {
+            // **create Statement object to allow execute a query */
+            statement = connect.createStatement();
+
+            // **execute query by calling executeUpdate() method */
+            if(statement.executeUpdate(query) > 0){
+                resultQuery = true;
+            }
+
+            // **close statement and connect */
+            statement.close();
+            connect.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultQuery;
+    }
+
+
+
 }
