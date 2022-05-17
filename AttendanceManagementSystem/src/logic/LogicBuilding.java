@@ -121,7 +121,7 @@ public class LogicBuilding {
     }
 
     // **deleteData method */
-    public static boolean deleteData(String query) {
+    public static boolean deleteData(String queryParent, String queryChild) {
         boolean resultQuery = false;
 
         getConnection();
@@ -131,8 +131,10 @@ public class LogicBuilding {
             statement = connect.createStatement();
 
             // **execute query by calling execute() method */
-            if (statement.executeUpdate(query) > 0) {
-                resultQuery = true;
+            if (statement.executeUpdate(queryChild) > 0) {
+                if(statement.executeUpdate(queryParent) > 0){
+                    resultQuery = true;
+                }
             }
 
             // **close statement and connect */
@@ -238,6 +240,45 @@ public class LogicBuilding {
         return resultQuery;
     }
 
+    // **getDataProfile method
+    public static Object[] getDataProfile(String query, int lengthArray) {
+        getConnection();
+
+        Object rowData[] = new Object[lengthArray];
+
+        try {
+            // **create Statement object to allow execute a query */
+            statement = connect.createStatement();
+
+            // **execute query by calling execute() method */
+            statement.execute(query);
+
+            // **retrieve the result of the query */
+            ResultSet resultSet = statement.getResultSet();
+
+            if(lengthArray == 5){
+            resultSet.next();
+            rowData[0] = resultSet.getString("first_name");
+            rowData[1] = resultSet.getString("last_name");
+            rowData[2] = resultSet.getString("gender");
+            rowData[3] = resultSet.getString("no_telephone");
+            rowData[4] = resultSet.getString("email");
+            }
+            if(lengthArray == 2){
+                resultSet.next();
+                rowData[0] = resultSet.getString("first_name");
+                rowData[1] = resultSet.getString("last_name");
+            }
+
+            // **close statement and connect */
+            statement.close();
+            connect.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rowData;
+    }
 
 
 }
