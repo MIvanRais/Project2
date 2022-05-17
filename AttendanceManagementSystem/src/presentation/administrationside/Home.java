@@ -24,12 +24,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Home extends JFrame implements ActionListener {
-    // 33, 72, 192 - primer
-    // 38, 78, 202 - secondary
     Object dataColumns[] = { "No", "Username", "Registration Date" };
+
     JMenuBar menuBar;
     JMenu adminMenu;
-    JMenuItem changePasswordMenu, logoutMenu;
+    JMenuItem changePasswordMenu, logoutMenu, profileMenu;
     JPanel panelNorth;
     JLabel labelHeader;
     JTable tableUsers;
@@ -49,18 +48,28 @@ public class Home extends JFrame implements ActionListener {
         menuBar.add(Box.createHorizontalGlue()); // **set menuBar position to right-align */
 
         // **create adminMenu */
-        adminMenu = new JMenu("Mochammad Ivan Ra'is");
+        adminMenu = new JMenu();
+
+        // **set text to relevant data on the JMenu
+        // **call LogicBuilding.getDataProfile method
+        Object getData[] = LogicBuilding.getDataProfile("SELECT * FROM admin_details WHERE admin_username ='" + Login.username + "';", 2);
+
+        adminMenu.setText(getData[0].toString() + " " + getData[1].toString());
+
         Font setFont = new Font("sans-serif", Font.BOLD, 14);
         UIManager.put("Menu.font", setFont);
 
         // **create menuItem */
         changePasswordMenu = new JMenuItem("Change Password");
         changePasswordMenu.addActionListener(this);
+        profileMenu = new JMenuItem("Profile");
+        profileMenu.addActionListener(this);
         logoutMenu = new JMenuItem("Logout");
         logoutMenu.addActionListener(this);
 
         // **add component (menu item) to menu */
         adminMenu.add(changePasswordMenu);
+        adminMenu.add(profileMenu);
         adminMenu.add(logoutMenu);
 
         // **add component (menu) to menu bar */
@@ -155,10 +164,16 @@ public class Home extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == changePasswordMenu) {
             // **when click changePasswordMenu item, it is going to open ChangePassword page
-            // */
             this.dispose();
             new ChangePassword();
         }
+
+        if (e.getSource() == profileMenu) {
+            // **when click profileMenu item, it is going to open Profile page
+            this.dispose();
+            new Profile();
+        }
+
         if (e.getSource() == logoutMenu) {
             // **when click logoutMenu item, it is going to close the page */
             int answer;
@@ -168,6 +183,7 @@ public class Home extends JFrame implements ActionListener {
                 this.dispose();
             }
         }
+
 
         if (e.getSource() == textFieldSearch) {
             // **when hit enter, it is going to search depending on your keyword
@@ -190,15 +206,16 @@ public class Home extends JFrame implements ActionListener {
 
             if (selectedRow != -1) {
                 // ** when you already selected row, it is going to delete the row depend on
-                // your selected row */
+                // **your selected row
                 String getUsername = tableUsers.getValueAt(selectedRow, 1).toString();
-                if (LogicBuilding.deleteData("DELETE FROM users WHERE username ='" + getUsername + "';")) {
+                if (LogicBuilding.deleteData("DELETE FROM users WHERE username ='" + getUsername + "';", "DELETE FROM user_details WHERE user_username ='" + getUsername + "';")) {
                     JOptionPane.showMessageDialog(null, "Delete Data User Successful", "Successful",
                             JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
                     new Home();
                 }
-            } else {
+            } 
+            else {
                 // **if unsuccessful delete the row, the popup will be appear */
                 JOptionPane.showMessageDialog(null, "Firstly Please Select A Data", "Unsuccessful",
                         JOptionPane.WARNING_MESSAGE);
