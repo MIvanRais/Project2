@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 
-import presentation.administrationside.ChangePassword;
-import presentation.administrationside.Login;
-import presentation.administrationside.UpdateProfile;
+// import presentation.administrationside.ChangePassword;
+// import presentation.administrationside.Login;
+// import presentation.administrationside.UpdateProfile;
 
 public class LogicBuilding {
 
@@ -178,8 +178,8 @@ public class LogicBuilding {
         return resultQuery;
     }
 
-    // **changePassword method
-    public static boolean chngePassword(String query) {
+    // **chngePasswordAdmin method
+    public static boolean chngePasswordAdmin(String queryCheck, String queryUpdate) {
         boolean resultQuery = false;
 
         getConnection();
@@ -189,17 +189,15 @@ public class LogicBuilding {
             statement = connect.createStatement();
 
             // **execute query by calling execute() method */
-            statement.execute(query);
+            statement.execute(queryCheck);
 
             // **retrieve the result of the query */
             ResultSet resultSet = statement.getResultSet();
 
             resultSet.next();
             if (resultSet.getInt(1) == 1) {
-                if (ChangePassword.newPass.equals(ChangePassword.confirmPass)) {
-                    if (statement.executeUpdate(
-                            "UPDATE admins SET password ='" + ChangePassword.newPass + "' WHERE username ='"
-                                    + Login.username + "' AND password ='" + Login.password + "';") > 0) {
+                if (presentation.administrationside.ChangePassword.newPass.equals(presentation.administrationside.ChangePassword.confirmPass)) {
+                    if (statement.executeUpdate(queryUpdate) > 0) {
                         resultQuery = true;
                     }
                 }
@@ -214,6 +212,42 @@ public class LogicBuilding {
         }
         return resultQuery;
     }
+
+        // **chngePasswordUser method
+        public static boolean chngePasswordUser(String queryCheck, String queryUpdate) {
+            boolean resultQuery = false;
+    
+            getConnection();
+    
+            try {
+                // **create Statement object to allow execute a query */
+                statement = connect.createStatement();
+    
+                // **execute query by calling execute() method */
+                statement.execute(queryCheck);
+    
+                // **retrieve the result of the query */
+                ResultSet resultSet = statement.getResultSet();
+    
+                resultSet.next();
+                if (resultSet.getInt(1) == 1) {
+                    if (presentation.userside.ChangePassword.newPass.equals(presentation.userside.ChangePassword.confirmPass)) {
+                        if (statement.executeUpdate(queryUpdate) > 0) {
+                            resultQuery = true;
+                        }
+                    }
+                }
+    
+                // **close statement and connect */
+                statement.close();
+                connect.close();
+    
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return resultQuery;
+        }
+    
 
     // **updateProfile method
     public static boolean updateProfile(String query) {
