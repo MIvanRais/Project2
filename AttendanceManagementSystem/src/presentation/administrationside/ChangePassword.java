@@ -17,8 +17,9 @@ import java.awt.event.ActionListener;
 public class ChangePassword extends JFrame implements ActionListener {
 
     JPanel panelWest, panelEast, panelSouth, panelLineWest;
-    JLabel labelProfile, labelFooter, labelCurrentPassword, labelNewPassword, labelConfirmPassword, labelWarnCurrPass, labelWarnNewPass,
-    labelWarnConfrimPass;
+    JLabel labelProfile, labelFooter, labelCurrentPassword, labelNewPassword, labelConfirmPassword, labelWarnCurrPass,
+            labelWarnNewPass,
+            labelWarnConfrimPass;
     JPasswordField passwordFieldCurrent, passwordFieldNew, passwordFieldConfirm;
     JButton btnChangePassword, btnBack;
     JRadioButton btnMale, btnFemale;
@@ -70,7 +71,7 @@ public class ChangePassword extends JFrame implements ActionListener {
         // **create passwordFieldCurrent
         passwordFieldCurrent = new JPasswordField();
         passwordFieldCurrent.setBounds(20, 100, 290, 30);
-        passwordFieldCurrent.setFont(new Font(null,Font.PLAIN,15));
+        passwordFieldCurrent.setFont(new Font(null, Font.PLAIN, 15));
 
         // **create labelWarnCurrPass
         labelWarnCurrPass = new JLabel("Please Enter Your Current Password");
@@ -87,9 +88,9 @@ public class ChangePassword extends JFrame implements ActionListener {
         // **create passwordFieldNew
         passwordFieldNew = new JPasswordField();
         passwordFieldNew.setBounds(20, 200, 290, 30);
-        passwordFieldNew.setFont(new Font(null,Font.PLAIN,15));
+        passwordFieldNew.setFont(new Font(null, Font.PLAIN, 15));
 
-         // **create labelWarnNewPass
+        // **create labelWarnNewPass
         labelWarnNewPass = new JLabel("Please Enter Your New Password");
         labelWarnNewPass.setBounds(20, 230, 290, 20);
         labelWarnNewPass.setFont(new Font(null, Font.ITALIC, 12));
@@ -104,7 +105,7 @@ public class ChangePassword extends JFrame implements ActionListener {
         // **create passwordFieldConfirm
         passwordFieldConfirm = new JPasswordField();
         passwordFieldConfirm.setBounds(20, 300, 290, 30);
-        passwordFieldConfirm.setFont(new Font(null,Font.PLAIN,15));
+        passwordFieldConfirm.setFont(new Font(null, Font.PLAIN, 15));
 
         // **create labelWarnConfrimPass
         labelWarnConfrimPass = new JLabel("Please Re-enter Your New Password");
@@ -170,10 +171,11 @@ public class ChangePassword extends JFrame implements ActionListener {
         }
 
         if (e.getSource() == btnChangePassword) {
-            //**when click btnChangePassword, what will happen?  */
+            // **when click btnChangePassword, what will happen? */
             if (passwordFieldNew.getPassword().length == 0 || passwordFieldCurrent.getPassword().length == 0
                     || passwordFieldConfirm.getPassword().length == 0) {
-                //**if one of each password fields empty, the specific condition will be happening  */
+                // **if one of each password fields empty, the specific condition will be
+                // happening */
                 ChangePassword.this.setVisible(false);
 
                 // //**change password form validation */
@@ -199,14 +201,17 @@ public class ChangePassword extends JFrame implements ActionListener {
                 }
 
                 ChangePassword.this.setVisible(true);
-            }else {
-                // **if all of password fields are not empty, the LogicBuilding.chngePassword is going to called */
+            } else {
+                // **if all of password fields are not empty, the LogicBuilding.chngePassword is
+                // going to called */
                 String currentPass = String.valueOf(passwordFieldCurrent.getPassword());
                 newPass = String.valueOf(passwordFieldNew.getPassword());
                 confirmPass = String.valueOf(passwordFieldConfirm.getPassword());
 
-                if (LogicBuilding.chngePassword("SELECT COUNT(*) FROM admins WHERE username ='" + Login.username
-                        + "'AND (password ='" + Login.password + "' AND password = '" + currentPass + "');")) {
+                if (LogicBuilding.chngePasswordAdmin("SELECT COUNT(*) FROM admins WHERE username ='" + Login.username
+                        + "'AND (password ='" + Login.password + "' AND password = '" + currentPass + "');",
+                        "UPDATE admins SET password ='" + newPass + "' WHERE username ='"
+                                + Login.username + "' AND password ='" + Login.password + "';")) {
                     JOptionPane.showMessageDialog(null, "Change Password Successfully", "Successful",
                             JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
