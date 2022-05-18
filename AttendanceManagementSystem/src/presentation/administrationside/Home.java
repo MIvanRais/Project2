@@ -99,7 +99,7 @@ public class Home extends JFrame implements ActionListener {
         // **The JTable can be set up to display any data model so we can pass in
         // ** */ DefaultTableModel to JTable
         tableUsers = new JTable(
-                LogicBuilding.getAllData("SELECT username, registration_date FROM users;", dataColumns)) {
+                LogicBuilding.getAllDataUser("SELECT username, registration_date FROM users;", dataColumns)) {
             @Override
             // **set to false in order to cells can't edit */
             public boolean isCellEditable(int row, int column) {
@@ -189,7 +189,7 @@ public class Home extends JFrame implements ActionListener {
             // **when hit enter, it is going to search depending on your keyword
             String keyword = textFieldSearch.getText();
             tableUsers.setModel(
-                    LogicBuilding.getSearchData("SELECT username, registration_date FROM users WHERE username LIKE '%"
+                    LogicBuilding.getSearchDataUser("SELECT username, registration_date FROM users WHERE username LIKE '%"
                             + keyword + "%' OR registration_date LIKE '%" + keyword + "%';", dataColumns));
 
         }
