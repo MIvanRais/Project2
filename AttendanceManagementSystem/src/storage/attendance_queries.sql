@@ -1,4 +1,3 @@
--- ALTER TABLE admins MODIFY password VARCHAR(15) NOT NULL;
 --**create database statement
 CREATE DATABASE attendance_db;
 
@@ -15,7 +14,7 @@ CREATE TABLE admins(
 
 --**create tr_admins_ai
 CREATE TRIGGER tr_admins_ai AFTER INSERT ON admins FOR EACH ROW
-INSERT INTO admin_details (admin_username) values (new.username);
+INSERT INTO admin_details (first_name, last_name, gender, no_telephone, email, admin_username) values ("first name", "last name", "Male", "no. phone", "email", new.username);
 
 --**create admin_details
 CREATE TABLE admin_details(
@@ -39,7 +38,7 @@ CREATE TABLE users(
 
 --**create tr_users_ai
 CREATE TRIGGER tr_users_ai AFTER INSERT ON users FOR EACH ROW
-INSERT INTO user_details (user_username) values (new.username);
+INSERT INTO user_details (first_name, last_name, gender, no_telephone, email, user_username) values ("first name", "last name", "Male", "no. phone", "email", new.username);
 
 --**create user_details
 CREATE TABLE user_details(
@@ -52,3 +51,17 @@ CREATE TABLE user_details(
     user_username VARCHAR(30),
     FOREIGN KEY(user_username) REFERENCES users(username)
 );
+
+--**create person
+CREATE TABLE person(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(30), 
+    last_name VARCHAR(30),
+    status VARCHAR(7) 
+);
+
+--**insert data person to person table
+INSERT INTO person (first_name, last_name, status) values 
+    ('Mochammad', 'Ivan Ra''is', ""),
+    ('Muhammad', 'Sidqi Mukhlisin', ""),
+    ('Muhammad', 'Fauzan Arsyi', "");
