@@ -3,9 +3,13 @@ package presentation.userside;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import logic.LogicBuilding;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -18,6 +22,8 @@ public class Login extends JFrame implements ActionListener{
     JPanel panelLine;
     static JTextField textFieldUsername;
     static JPasswordField passwordField;
+
+    public static String username, password;
 
     Login(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,8 +114,48 @@ public class Login extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+        if(e.getSource()==btnClear){
+            // **when click btnClear, it is going to clear those */
+            textFieldUsername.setText("");
+            passwordField.setText("");
+        }
         
+        if(e.getSource()==btnLogin){
+            // if(textFieldUsername.getText().trim().isEmpty() || passwordField.getPassword().length == 0){
+                Login.this.setVisible(false);
+
+                // **login form validation
+                if(textFieldUsername.getText().trim().isEmpty()){
+                    this.add(labelWarnUsername);
+                }else{
+                    this.remove(labelWarnUsername);
+                }
+
+                if (passwordField.getPassword().length == 0) {
+                    this.add(labelWarnPass);
+                }
+
+                if (passwordField.getPassword().length > 0) {
+                    this.remove(labelWarnPass);
+                }
+
+                Login.this.setVisible(true);
+            // }
+            username = textFieldUsername.getText();
+            password = String.valueOf(passwordField.getPassword()); 
+            
+            if (LogicBuilding.checkLogin("SELECT COUNT(*) FROM users WHERE username ='" + username
+                        + "' AND password ='" + password + "';")) {
+                    JOptionPane.showMessageDialog(null, "Login Successfully", "Successful",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                    new Home();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login Unsuccessfully", "Unsuccessful",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
+        }
     }
     
 }

@@ -5,19 +5,22 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+
+import logic.LogicBuilding;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AbsentForm extends JFrame implements ActionListener{
+public class AbsentForm extends JFrame implements ActionListener {
 
     JPanel panelWest, panelEast, panelSouth, panelLineWest;
-    JLabel labelAbsent, labelFirstName, labelLastName, labelEmail, labelProject, labelGender, labelNoTelephone,
+    JLabel labelFirstName, labelLastName, labelEmail, labelProject, labelAbsent, labelNoTelephone,
             labelFooter, labelWarnGender;
     JTextField textFieldFirstName, textFieldLastName, textFieldNoTlp, textFieldEmail;
     JButton btnSave, btnBack;
@@ -26,9 +29,8 @@ public class AbsentForm extends JFrame implements ActionListener{
 
     public static String getFirstName, getLastName, getGender, getNoTlphn, getEmail;
 
-    AbsentForm(){
-        // this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    AbsentForm() {
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setTitle("Absent");
         this.setSize(600, 500);
         this.setResizable(false);
@@ -85,11 +87,11 @@ public class AbsentForm extends JFrame implements ActionListener{
         textFieldLastName.setBounds(20, 165, 300, 30);
         textFieldLastName.setFont(new Font(null, Font.PLAIN, 15));
 
-        // **create labelGender
-        labelGender = new JLabel("Gender");
-        labelGender.setBounds(20, 210, 115, 30);
-        labelGender.setFont(new Font(null, Font.PLAIN, 15));
-        labelGender.setForeground(new Color(148, 164, 175));
+        // **create labelAbsent
+        labelAbsent = new JLabel("Absent");
+        labelAbsent.setBounds(20, 210, 115, 30);
+        labelAbsent.setFont(new Font(null, Font.PLAIN, 15));
+        labelAbsent.setForeground(new Color(148, 164, 175));
 
         // **create radio button
         btnPresent = new JRadioButton("Present");
@@ -120,7 +122,7 @@ public class AbsentForm extends JFrame implements ActionListener{
         btnGroup.add(btnAbsent);
 
         // **create labelWarnGender
-        labelWarnGender = new JLabel("Please Enter Your Gender");
+        labelWarnGender = new JLabel("Please Enter Your Absent");
         labelWarnGender.setBounds(20, 275, 290, 20);
         labelWarnGender.setFont(new Font(null, Font.ITALIC, 12));
         labelWarnGender.setForeground(Color.red);
@@ -129,7 +131,7 @@ public class AbsentForm extends JFrame implements ActionListener{
         btnSave = new JButton("Save");
         btnSave.setBounds(100, 330, 100, 35);
         btnSave.setFocusable(false);
-        btnSave.setBackground(new Color(255,165,0));
+        btnSave.setBackground(new Color(255, 165, 0));
         btnSave.setBorderPainted(false);
         btnSave.setForeground(Color.white);
         btnSave.addActionListener(this);
@@ -138,30 +140,36 @@ public class AbsentForm extends JFrame implements ActionListener{
         btnBack = new JButton("Back");
         btnBack.setBounds(217, 330, 100, 35);
         btnBack.setFocusable(false);
-        btnBack.setBackground(new Color(255,193,77));
+        btnBack.setBackground(new Color(255, 193, 77));
         btnBack.setBorderPainted(false);
         btnBack.setForeground(Color.white);
         btnBack.addActionListener(this);
 
         // **set textField and radioButton to relevant data
         // **call LogicBuilding.getDataProfile method
-        // Object getData[] = LogicBuilding.getDataProfile("SELECT * FROM user_details WHERE user_username ='" + Login.username + "';", 5);
+        Object getData[] = LogicBuilding.getDataPerson(
+                "SELECT * FROM person WHERE CONCAT(first_name, ' ', last_name)='" + Home.getUsername + "';");
 
-        // textFieldFirstName.setText(getData[0].toString());
-        // textFieldLastName.setText(getData[1].toString());
-        // if(getData[2].equals("Male")){
-        //     btnPresent.setSelected(true);;
-        // } 
-        // if(getData[2].equals("Female")){
-        //     btnPermit.setSelected(true);;
-        // }
-        // textFieldNoTlp.setText(getData[3].toString());
-        // textFieldEmail.setText(getData[4].toString());
+        textFieldFirstName.setText(getData[0].toString());
+        textFieldLastName.setText(getData[1].toString());
+        if (getData[2].equals("Present")) {
+            btnPresent.setSelected(true);
+            ;
+        } else if (getData[2].equals("Permit")) {
+            btnPermit.setSelected(true);
+            ;
+        } else if (getData[2].equals("Absent")) {
+            btnAbsent.setSelected(true);
+        } else {
+            btnAbsent.setSelected(false);
+            btnPermit.setSelected(false);
+            btnPresent.setSelected(false);
+        }
 
         // **add components to panelEast
         panelEast.add(labelFirstName);
         panelEast.add(labelLastName);
-        panelEast.add(labelGender);
+        panelEast.add(labelAbsent);
         panelEast.add(btnSave);
         panelEast.add(textFieldFirstName);
         panelEast.add(textFieldLastName);
@@ -169,12 +177,11 @@ public class AbsentForm extends JFrame implements ActionListener{
         panelEast.add(btnPermit);
         panelEast.add(btnAbsent);
         panelEast.add(btnBack);
-        panelEast.add(labelWarnGender);
 
         // **create panelSouth
         panelSouth = new JPanel();
         panelSouth.setBounds(0, 400, 600, 100);
-        panelSouth.setBackground(new Color(255,165,0));
+        panelSouth.setBackground(new Color(255, 165, 0));
         panelSouth.setLayout(null);
 
         // **create labelFooter */
@@ -196,8 +203,49 @@ public class AbsentForm extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        
+        if (e.getSource() == btnBack) {
+            this.dispose();
+            new Home();
+        }
+
+        if (e.getSource() == btnSave) {
+            // if (btnAbsent.toString().equals("null") ||
+            // btnPresent.toString().equals("null")
+            // || btnPermit.toString().equals("null")) {
+
+            AbsentForm.this.setVisible(false);
+
+            if (btnAbsent.isSelected() || btnPermit.isSelected() || btnPresent.isSelected()) {
+                panelEast.remove(labelWarnGender);
+            } else {
+                panelEast.add(labelWarnGender);
+            }
+
+            AbsentForm.this.setVisible(true);
+            // }
+            // else {
+            if (btnAbsent.isSelected()) {
+                getGender = btnAbsent.getText();
+            } else if (btnPermit.isSelected()) {
+                getGender = btnPermit.getText();
+            } else if (btnPresent.isSelected()) {
+                getGender = btnPresent.getText();
+            }
+
+            if (btnAbsent.isSelected() || btnPermit.isSelected() || btnPresent.isSelected()) {
+                if (LogicBuilding.insertAbsent(
+                        "UPDATE person SET status='" + getGender + "' WHERE CONCAT(first_name, ' ', last_name)='"
+                                + Home.getUsername + "';")) {
+                    JOptionPane.showMessageDialog(null, "Insert Absent Successfully", "Successful",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                    new Home();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Insert Absent Unsuccessfully", "Unsuccessful",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            // }
+        }
     }
-    
 }

@@ -4,9 +4,13 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+
+import logic.LogicBuilding;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -23,9 +27,10 @@ public class ChangePassword extends JFrame implements ActionListener {
     JRadioButton btnMale, btnFemale;
     ButtonGroup btnGroup;
 
+    public static String newPass, confirmPass;
+
     ChangePassword() {
-        // this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setTitle("Change Password");
         this.setSize(600, 600);
         this.setResizable(false);
@@ -113,7 +118,7 @@ public class ChangePassword extends JFrame implements ActionListener {
         btnChangePassword = new JButton("Change Password");
         btnChangePassword.setBounds(30, 370, 165, 35);
         btnChangePassword.setFocusable(false);
-        btnChangePassword.setBackground(new Color(255,165,0));
+        btnChangePassword.setBackground(new Color(255, 165, 0));
         btnChangePassword.setBorderPainted(false);
         btnChangePassword.setForeground(Color.white);
         btnChangePassword.addActionListener(this);
@@ -122,7 +127,7 @@ public class ChangePassword extends JFrame implements ActionListener {
         btnBack = new JButton("Back");
         btnBack.setBounds(210, 370, 100, 35);
         btnBack.setFocusable(false);
-        btnBack.setBackground(new Color(255,193,77));
+        btnBack.setBackground(new Color(255, 193, 77));
         btnBack.setBorderPainted(false);
         btnBack.setForeground(Color.white);
         btnBack.addActionListener(this);
@@ -140,7 +145,7 @@ public class ChangePassword extends JFrame implements ActionListener {
         // **create panelSouth
         panelSouth = new JPanel();
         panelSouth.setBounds(0, 500, 600, 100);
-        panelSouth.setBackground(new Color(255,165,0));
+        panelSouth.setBackground(new Color(255, 165, 0));
         panelSouth.setLayout(null);
 
         // **create labelFooter */
@@ -162,8 +167,66 @@ public class ChangePassword extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+        if (e.getSource() == btnBack) {
+            // **when click homeMenu item, it is going to open home page
+            this.dispose();
+            new Home();
+        }
 
+        if (e.getSource() == btnChangePassword) {
+            // **when click btnChangePassword, what will happen? */
+            // if (passwordFieldNew.getPassword().length == 0 ||
+            // passwordFieldCurrent.getPassword().length == 0
+            // || passwordFieldConfirm.getPassword().length == 0) {
+            // **if one of each password fields empty, the specific condition will be
+            // happening */
+            ChangePassword.this.setVisible(false);
+
+            // //**change password form validation */
+            if (passwordFieldCurrent.getPassword().length == 0) {
+                panelEast.add(labelWarnCurrPass);
+            }
+            if (passwordFieldCurrent.getPassword().length > 1) {
+                panelEast.remove(labelWarnCurrPass);
+            }
+
+            if (passwordFieldNew.getPassword().length == 0) {
+                panelEast.add(labelWarnNewPass);
+            }
+            if (passwordFieldNew.getPassword().length > 1) {
+                panelEast.remove(labelWarnNewPass);
+            }
+
+            if (passwordFieldConfirm.getPassword().length == 0) {
+                panelEast.add(labelWarnConfrimPass);
+            }
+            if (passwordFieldConfirm.getPassword().length > 1) {
+                panelEast.remove(labelWarnConfrimPass);
+            }
+
+            ChangePassword.this.setVisible(true);
+            // }
+
+            String currentPass = String.valueOf(passwordFieldCurrent.getPassword());
+            newPass = String.valueOf(passwordFieldNew.getPassword());
+            confirmPass = String.valueOf(passwordFieldConfirm.getPassword());
+
+            if (LogicBuilding.chngePasswordUser(
+                "SELECT COUNT(*) FROM users WHERE username ='" + Login.username
+                        + "'AND (password ='" + Login.password + "' AND password = '" + currentPass + "');",
+
+                        "UPDATE users SET password ='" + newPass + "' WHERE username ='"
+                                + Login.username + "' AND password ='" + Login.password + "';"
+                                )) {
+                    JOptionPane.showMessageDialog(null, "Change Password Successfully", "Successful",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                    new Login();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Change Password Unsuccessfully", "Unsuccessful",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+        }
     }
 
 }

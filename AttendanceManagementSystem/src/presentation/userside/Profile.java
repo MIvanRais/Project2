@@ -8,9 +8,13 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.UIManager;
+
+import logic.LogicBuilding;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -21,15 +25,12 @@ public class Profile extends JFrame implements ActionListener{
     JPanel panelWest, panelEast, panelSouth, panelLineWest, panelLineEast;
     JLabel labelProfile, labelFullName, labelFirstName, labelLastName, labelEmail, labelProject, labelGender, labelNoTelephone, labelFooter, dataFirstName, dataLastName, dataGender, dataNoTlp, dataEmail;
     JButton btnUpdate;
-    JRadioButton btnMale, btnFemale;
-    ButtonGroup btnGroup;
     JMenuBar menuBar;
-    JMenu adminMenu;
+    JMenu userMenu;
     JMenuItem homeMenu, logoutMenu, changePasswordMenu;
 
     Profile(){
-        // this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setTitle("Profile");
         this.setSize(600, 710);
         this.setResizable(false);
@@ -40,7 +41,7 @@ public class Profile extends JFrame implements ActionListener{
         menuBar.add(Box.createHorizontalGlue()); // **set menuBar position to right-align */
 
         // **create adminMenu
-        adminMenu = new JMenu("Mochammad Ivan Ra'is");
+        userMenu = new JMenu();
         Font setFont = new Font("sans-serif", Font.BOLD, 14);
         UIManager.put("Menu.font", setFont);
 
@@ -55,12 +56,12 @@ public class Profile extends JFrame implements ActionListener{
         logoutMenu.setBackground(Color.white);
         logoutMenu.addActionListener(this);
 
-        // **add components to adminMenu
-        adminMenu.add(homeMenu);
-        adminMenu.add(changePasswordMenu);
-        adminMenu.add(logoutMenu);
+        // **add components to userMenu
+        userMenu.add(homeMenu);
+        userMenu.add(changePasswordMenu);
+        userMenu.add(logoutMenu);
 
-        menuBar.add(adminMenu);
+        menuBar.add(userMenu);
 
         // **create panelWest
         panelWest = new JPanel();
@@ -173,15 +174,15 @@ public class Profile extends JFrame implements ActionListener{
 
         // **set text to relevant data
         // **call LogicBuilding.getDataProfile method
-        // Object getData[] = LogicBuilding.getDataProfile("SELECT * FROM admin_details WHERE admin_username ='" + Login.username + "';", 5);
+        Object getData[] = LogicBuilding.getDataProfile("SELECT * FROM user_details WHERE user_username ='" + Login.username + "';", 5);
 
-        // adminMenu.setText(getData[0].toString() + " " + getData[1].toString());
-        // labelFullName.setText(getData[0].toString() + " " + getData[1].toString());
-        // dataFirstName.setText(getData[0].toString());
-        // dataLastName.setText(getData[1].toString());
-        // dataGender.setText(getData[2].toString());
-        // dataNoTlp.setText(getData[3].toString());
-        // dataEmail.setText(getData[4].toString());
+        userMenu.setText(getData[0].toString() + " " + getData[1].toString());
+        labelFullName.setText(getData[0].toString() + " " + getData[1].toString());
+        dataFirstName.setText(getData[0].toString());
+        dataLastName.setText(getData[1].toString());
+        dataGender.setText(getData[2].toString());
+        dataNoTlp.setText(getData[3].toString());
+        dataEmail.setText(getData[4].toString());
 
         // **add components to panelEast
         panelEast.add(labelFullName);
@@ -224,7 +225,30 @@ public class Profile extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+        if(e.getSource()==btnUpdate){
+            this.dispose();
+            new UpdateProfile();
+        }
+
+        if(e.getSource()==homeMenu){
+            this.dispose();
+            new Home();
+        }
+
+        if(e.getSource()==changePasswordMenu){
+            this.dispose();
+            new ChangePassword();
+        }
+
+        if(e.getSource()==logoutMenu){
+            // **when click logoutMenu item, it is going to close the page */
+            int answer;
+            answer = JOptionPane.showConfirmDialog(null, "Are you sure want to logout?", "Logout",
+                    JOptionPane.YES_NO_OPTION);
+            if (answer == 0) {
+                this.dispose();
+            }
+        }
         
     }
     

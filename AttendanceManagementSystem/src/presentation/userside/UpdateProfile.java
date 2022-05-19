@@ -4,9 +4,12 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+
+import logic.LogicBuilding;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -27,8 +30,7 @@ public class UpdateProfile extends JFrame implements ActionListener{
     public static String getFirstName, getLastName, getGender, getNoTlphn, getEmail;
 
     UpdateProfile(){
-        // this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setTitle("Update Profile");
         this.setSize(600, 650);
         this.setResizable(false);
@@ -180,18 +182,18 @@ public class UpdateProfile extends JFrame implements ActionListener{
 
         // **set textField and radioButton to relevant data
         // **call LogicBuilding.getDataProfile method
-        // Object getData[] = LogicBuilding.getDataProfile("SELECT * FROM admin_details WHERE admin_username ='" + Login.username + "';", 5);
+        Object getData[] = LogicBuilding.getDataProfile("SELECT * FROM user_details WHERE user_username ='" + Login.username + "';", 5);
 
-        // textFieldFirstName.setText(getData[0].toString());
-        // textFieldLastName.setText(getData[1].toString());
-        // if(getData[2].equals("Male")){
-        //     btnMale.setSelected(true);;
-        // } 
-        // if(getData[2].equals("Female")){
-        //     btnFemale.setSelected(true);;
-        // }
-        // textFieldNoTlp.setText(getData[3].toString());
-        // textFieldEmail.setText(getData[4].toString());
+        textFieldFirstName.setText(getData[0].toString());
+        textFieldLastName.setText(getData[1].toString());
+        if(getData[2].equals("Male")){
+            btnMale.setSelected(true);;
+        } 
+        if(getData[2].equals("Female")){
+            btnFemale.setSelected(true);;
+        }
+        textFieldNoTlp.setText(getData[3].toString());
+        textFieldEmail.setText(getData[4].toString());
 
         // **add components to panelEast
         panelEast.add(labelFirstName);
@@ -233,7 +235,73 @@ public class UpdateProfile extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+        if (e.getSource() == btnBack) {
+            this.dispose();
+            new Profile();
+        }
+
+        if (e.getSource() == btnSave) {
+            // if (textFieldFirstName.getText().trim().isEmpty() || textFieldLastName.getText().trim().isEmpty()
+            //         || btnMale.toString().equalsIgnoreCase("null") || btnFemale.toString().equalsIgnoreCase("null")
+            //         || textFieldNoTlp.getText().trim().isEmpty() || textFieldEmail.getText().trim().isEmpty()) {
+                UpdateProfile.this.setVisible(false);
+
+                if (textFieldFirstName.getText().trim().isEmpty()) {
+                    panelEast.add(labelWarnFirstName);
+                } else {
+                    panelEast.remove(labelWarnFirstName);
+                }
+
+                if (textFieldLastName.getText().trim().isEmpty()) {
+                    panelEast.add(labelWarnLastName);
+                } else {
+                    panelEast.remove(labelWarnLastName);
+                }
+
+                if (btnMale.isSelected() || btnFemale.isSelected()) {
+                    panelEast.remove(labelWarnGender);
+                } else {
+                    panelEast.add(labelWarnGender);
+                }
+
+                if (textFieldNoTlp.getText().trim().isEmpty()) {
+                    panelEast.add(labelWarnNoTlp);
+                } else {
+                    panelEast.remove(labelWarnNoTlp);
+                }
+
+                if (textFieldEmail.getText().trim().isEmpty()) {
+                    panelEast.add(labelWarnEmail);
+                } else {
+                    panelEast.remove(labelWarnEmail);
+                }
+
+                UpdateProfile.this.setVisible(true);
+            // }
+            // **get all data from admin
+            getFirstName =  textFieldFirstName.getText() ;
+            getLastName = textFieldLastName.getText();
+            if (btnMale.isSelected()) {
+                getGender = btnMale.getText() ;
+            } else if (btnFemale.isSelected()) {
+                getGender = btnFemale.getText();
+            }
+            getNoTlphn = textFieldNoTlp.getText();
+            getEmail = textFieldEmail.getText();
+
+            if (LogicBuilding.updateProfile(
+                "UPDATE user_details SET first_name = '" + getFirstName + "', last_name = '"+ getLastName +"', gender = '"+ getGender +"', no_telephone = '"+ getNoTlphn +"', email = '"+ getEmail +"' WHERE user_username = '"+ Login.username +"';"
+                )
+                ) {
+                JOptionPane.showMessageDialog(null, "Change Profile Successfully", "Successful",
+                        JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+                new Profile();
+            } else {
+                JOptionPane.showMessageDialog(null, "Change Profile Unsuccessfully", "Unsuccessful",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } 
         
     }
     
