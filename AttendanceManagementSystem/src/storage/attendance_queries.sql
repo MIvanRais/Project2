@@ -62,6 +62,6 @@ CREATE TABLE person(
 
 --**insert data person to person table
 INSERT INTO person (first_name, last_name, status) values 
-    ('Mochammad', 'Ivan Ra''is', ""),
+    ('Mochammad', 'Ivan Rais', ""),
     ('Muhammad', 'Sidqi Mukhlisin', ""),
     ('Muhammad', 'Fauzan Arsyi', "");
